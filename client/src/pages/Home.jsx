@@ -5,49 +5,48 @@ import TaskList from "../components/TaskList";
 import EmptyState from "../components/EmptyState";
 import { getTasks } from "../services/taskApi.js";
 
+import TaskForm from "../components/TaskForm";
+import { createTask } from "../services/taskApi";
+
 const Home = () => {
-  const [tasks, setTasks] =
-    useState([]);
+  const [tasks, setTasks] = useState([]);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
 
-      const response =
-        await getTasks(search);
+      const response = await getTasks(search);
 
-         console.log(response.data);
+      console.log(response.data);
 
       setTasks(response.data);
     } catch (error) {
-      console.error(
-        "Error fetching tasks:",
-        error
-      );
+      console.error("Error fetching tasks:", error);
     } finally {
       setLoading(false);
     }
   };
+  const handleCreateTask = async (taskData) => {
+    try {
+      await createTask(taskData);
 
+      fetchTasks();
+    } catch (error) {
+      console.error("Failed to create task", error);
+    }
+  };
   useEffect(() => {
     fetchTasks();
   }, [search]);
 
-  const completedTasks =
-    tasks.filter(
-      (task) => task.completed
-    ).length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
 
-  const activeTasks =
-    tasks.length -
-    completedTasks;
-   
+  const activeTasks = tasks.length - completedTasks;
+
   return (
     <div className="min-h-screen bg-slate-100 p-6">
       <div className="max-w-4xl mx-auto">
@@ -57,15 +56,10 @@ const Home = () => {
           completed={completedTasks}
         />
 
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-        />
-
+        <SearchBar search={search} setSearch={setSearch} />
+        <TaskForm onSubmit={handleCreateTask} />
         {loading ? (
-          <p className="text-center">
-            Loading tasks...
-          </p>
+          <p className="text-center">Loading tasks...</p>
         ) : tasks.length === 0 ? (
           <EmptyState />
         ) : (

@@ -4,11 +4,24 @@ const TASK_FILE = "./data/tasks.json";
 
 export const getAllTasks = async (req, res) => {
   try {
-    const tasks = await readJSON(TASK_FILE);
+    const { search = "" } = req.query;
 
-    const sortedTasks = tasks.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-    );
+const tasks = await readJSON(TASK_FILE);
+
+const filteredTasks = tasks.filter(
+  (task) =>
+    task.title
+      .toLowerCase()
+      .includes(search.toLowerCase())
+);
+
+const sortedTasks = filteredTasks.sort(
+  (a, b) =>
+    new Date(b.createdAt) -
+    new Date(a.createdAt)
+);
+
+    
 
     res.status(200).json({
       sortedTasks,
@@ -58,19 +71,18 @@ export const createTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, descreption, dueDate } = req.body();
-
+    const { title, descreption, dueDate } = req.body;
     if (!title?.trim()) {
       return res.status(400).json({
         message: "Title is required",
       });
     }
-
+    
     const tasks = await readJSON(TASK_FILE);
-
+    
     const taskIndex = tasks.findIndex((task) => task.id === id);
 
-    if ((taskIndex = -1)) {
+    if ((taskIndex === -1)) {
       return res.status(400).json({
         message: "Task dose not exist",
       });
@@ -87,7 +99,7 @@ export const updateTask = async (req, res) => {
 
     res.status(200).json({
       message: "Task Updated successfully",
-      tasks: task[taskIndex],
+      tasks: tasks[taskIndex],
     });
   } catch (error) {
     console.error(error);
@@ -100,24 +112,52 @@ export const updateTask = async (req, res) => {
 
 export const toggleTaskStatus = async (req, res) => {
   try {
-    res.json({
-      message: "Toggle task",
+    const { id } = req.params;
+    const tasks = await readJSON(TASK_FILE);
+
+    const taskIndex = tasks.findIndex((task) => (task.id === id));
+    if (taskIndex === -1) {
+      return res.status(400).json({
+        message: "Task not found",
+      });
+    }
+
+    tasks[taskIndex].completed = !tasks[taskIndex].completed;
+    await writeJSON(TASK_FILE, tasks);
+    res.status(200).json({
+      message: "Task status updated successfully",
+      task: tasks[taskIndex],
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
-      message: "Server error",
+      message: "Failed to update task status",
     });
   }
 };
 
 export const deleteTask = async (req, res) => {
   try {
-    res.json({
-      message: "Delete task",
+    const { id } = req.params;
+    const tasks = await readJSON(TASK_FILE);
+
+    const taskIndex = tasks.findIndex((task) => (task.id === id));
+    if (taskIndex === -1) {
+      return res.status(400).json({
+        message: "Task not found",
+      });
+    }
+    tasks.splice(taskIndex, 1);
+    await writeJSON(TASK_FILE, tasks);
+    res.status(200).json({
+      message: "Task deleted successfully",
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
-      message: "Server error",
+      message: "Failed to delete task",
     });
   }
 };

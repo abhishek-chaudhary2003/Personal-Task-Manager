@@ -23,9 +23,9 @@ const sortedTasks = filteredTasks.sort(
 
     
 
-    res.status(200).json({
+    res.status(200).json(
       sortedTasks,
-    });
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({

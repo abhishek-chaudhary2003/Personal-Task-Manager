@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "e4ff3796-1390-493a-9ea9-c220117c6947",
+    "title": "Finish assignment",
+    "descreption": "",
+    "dueDate": "2026-06-15",
+    "completed": false,
+    "createdAt": "2026-06-12T12:24:28.337Z"
+  }
+]

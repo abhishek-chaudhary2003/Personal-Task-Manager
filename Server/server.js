@@ -9,13 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://task-manager-app-frontend.netlify.app/",
-    ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  }),
+  cors(),
 );
 app.use(express.json());
 

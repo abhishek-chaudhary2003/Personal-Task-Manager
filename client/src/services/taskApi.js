@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API =
-  "https://personal-task-manager-qhvd.onrender.com";
+  "https://personal-task-manager-qhvd.onrender.com/api/tasks";
 
 export const getTasks = async (
   search = ""

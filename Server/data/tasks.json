@@ -44,7 +44,7 @@
     "title": "React Project UI",
     "descreption": "",
     "dueDate": "2026-06-17",
-    "completed": false,
+    "completed": true,
     "createdAt": "2026-06-12T16:10:15.242Z"
   },
   {
@@ -52,30 +52,14 @@
     "title": "Fix Backend Bugs",
     "descreption": "",
     "dueDate": "2026-06-16",
-    "completed": false,
+    "completed": true,
     "createdAt": "2026-06-12T16:10:20.673Z"
   },
   {
-    "id": "36763c38-4bce-44d2-9929-989756a61670",
-    "title": "Learn Tailwind CSS",
-    "descreption": "",
-    "dueDate": "2026-06-22",
-    "completed": false,
-    "createdAt": "2026-06-12T16:10:25.943Z"
-  },
-  {
-    "id": "51390d26-4c4c-49c3-9ada-caef7d6b5210",
-    "title": "Submit Internship Assignment",
-    "descreption": "",
-    "dueDate": "2026-06-14",
-    "completed": false,
-    "createdAt": "2026-06-12T16:10:31.046Z"
-  },
-  {
     "id": "fdc3fc98-9fea-420f-8500-eda4d1f03365",
-    "title": "eat food",
+    "title": "rma",
     "descreption": "",
-    "dueDate": "2026-06-12",
+    "dueDate": "2026-06-19",
     "completed": false,
     "createdAt": "2026-06-12T18:19:27.772Z"
   }

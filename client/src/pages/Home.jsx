@@ -3,10 +3,17 @@ import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import TaskList from "../components/TaskList";
 import EmptyState from "../components/EmptyState";
-import { getTasks } from "../services/taskApi.js";
+
 
 import TaskForm from "../components/TaskForm";
-import { createTask } from "../services/taskApi";
+
+import {
+  getTasks,
+  createTask,
+  toggleTask,
+  deleteTask,
+  updateTask,
+} from "../services/taskApi";
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -14,6 +21,8 @@ const Home = () => {
   const [search, setSearch] = useState("");
 
   const [loading, setLoading] = useState(true);
+
+  const [editingTask, setEditingTask] = useState(null);
 
   const fetchTasks = async () => {
     try {
@@ -39,6 +48,41 @@ const Home = () => {
       console.error("Failed to create task", error);
     }
   };
+  const handleToggleTask = async (id) => {
+    try {
+      await toggleTask(id);
+
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleDeleteTask = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteTask(id);
+
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleEditTask = async (taskData) => {
+    try {
+      await updateTask(editingTask.id, taskData);
+
+      setEditingTask(null);
+
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     fetchTasks();
   }, [search]);
@@ -57,13 +101,22 @@ const Home = () => {
         />
 
         <SearchBar search={search} setSearch={setSearch} />
-        <TaskForm onSubmit={handleCreateTask} />
+        <TaskForm
+          onSubmit={editingTask ? handleEditTask : handleCreateTask}
+          editingTask={editingTask}
+          onCancel={() => setEditingTask(null)}
+        />
         {loading ? (
           <p className="text-center">Loading tasks...</p>
         ) : tasks.length === 0 ? (
           <EmptyState />
         ) : (
-          <TaskList tasks={tasks} />
+          <TaskList
+            tasks={tasks}
+            onToggle={handleToggleTask}
+            onDelete={handleDeleteTask}
+            onEdit={setEditingTask}
+          />
         )}
       </div>
     </div>
